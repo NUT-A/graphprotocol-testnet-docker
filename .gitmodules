@@ -4,3 +4,6 @@
 [submodule "qlog"]
 	path = qlog
 	url = https://github.com/graphprotocol/qlog
+[submodule "autoagora-indexer-service"]
+	path = autoagora-indexer-service
+	url = https://github.com/semiotic-ai/autoagora-indexer-service
