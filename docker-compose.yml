@@ -20,8 +20,26 @@ volumes:
     nginx_vhost: {}
     nginx_html: {}
     nginx_acme: {}
+    rabbitmq_data: {}
 
 services:
+
+######################################################################################
+#####################               RABBITMQ                   #######################
+######################################################################################
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    expose:
+        - 5672
+    ports:
+        - 15672:15672
+    volumes:
+        - rabbitmq_data/data/:/var/lib/rabbitmq/
+        - rabbitmq_data/log/:/var/log/rabbitmq
+    networks:
+        - monitor-net
 
 ######################################################################################
 #####################            CLI CONTAINER                 #######################
@@ -48,13 +66,17 @@ services:
 ######################################################################################
 
   indexer-service:
-    image: ${INDEXER_SERVICE_VERSION:-ghcr.io/graphprotocol/indexer-service:v0.20.5-alpha.1}
+    build:
+      context: ./autoagora-indexer-service
+      args:
+        INDEXER_SERVICE_TAG: ${INDEXER_SERVICE_VERSION:-v0.20.5-alpha.1}
     container_name: indexer-service
     depends_on:
       - index-node-0
       - query-node-0
       - indexer-agent
       - postgres2
+      - rabbitmq
       #- vector-node
     environment:
       INDEXER_SERVICE_MNEMONIC: ${OPERATOR_SEED_PHRASE}
@@ -83,6 +105,7 @@ services:
       VIRTUAL_HOST: ${INDEX_HOST}
       VIRTUAL_PORT: 7600
       LETSENCRYPT_HOST: ${INDEX_HOST}
+      RABBITMQ_HOST: http://rabbitmq:5672
     expose:
       - 7300
       - 7600
@@ -225,7 +248,6 @@ services:
       GRAPH_ETH_CALL_GAS: 50000000
       GRAPH_GETH_ETH_CALL_ERRORS: "out of gas"
       GRAPH_MAX_GAS_PER_HANDLER: 1000000000000000
-      GRAPH_LOG_QUERY_TIMING: gql
       EXPERIMENTAL_SUBGRAPH_VERSION_SWITCHING_MODE: synced
       GRAPH_KILL_IF_UNRESPONSIVE: "true"
       #VIRTUAL_HOST: ${QUERY_HOST}
@@ -301,7 +323,6 @@ services:
       - nginx_acme:/etc/acme.sh
       - ./nginx-proxy/htpasswd:/etc/nginx/htpasswd
       - ./nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-    restart: unless-stopped
     networks:
       - monitor-net
     restart: unless-stopped
