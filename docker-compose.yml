@@ -36,8 +36,7 @@ services:
     ports:
         - 15672:15672
     volumes:
-        - rabbitmq_data/data/:/var/lib/rabbitmq/
-        - rabbitmq_data/log/:/var/log/rabbitmq
+        - rabbitmq_data:/var/lib/rabbitmq/
     networks:
         - monitor-net
 
