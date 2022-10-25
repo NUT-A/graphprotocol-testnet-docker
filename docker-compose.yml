@@ -102,7 +102,7 @@ services:
       VIRTUAL_HOST: ${INDEX_HOST}
       VIRTUAL_PORT: 7600
       LETSENCRYPT_HOST: ${INDEX_HOST}
-      RABBITMQ_HOST: http://rabbitmq:5672
+      RABBITMQ_HOST: rabbitmq:5672
     expose:
       - 7300
       - 7600
