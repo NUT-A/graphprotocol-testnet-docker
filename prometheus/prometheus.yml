@@ -64,6 +64,16 @@ scrape_configs:
     static_configs:
       - targets: ['grafana:3000']
 
+  - job_name: 'autoagora'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['autoagora:8000']
+
+  - job_name: 'nethermind'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['gnosis-nethermind:9090']
+
 alerting:
   alertmanagers:
   - scheme: http
