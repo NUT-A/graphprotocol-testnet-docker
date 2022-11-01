@@ -20,25 +20,8 @@ volumes:
     nginx_vhost: {}
     nginx_html: {}
     nginx_acme: {}
-    rabbitmq_data: {}
 
 services:
-
-######################################################################################
-#####################               RABBITMQ                   #######################
-######################################################################################
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: 'rabbitmq'
-    expose:
-        - 5672
-    ports:
-        - 15672:15672
-    volumes:
-        - rabbitmq_data:/var/lib/rabbitmq/
-    networks:
-        - monitor-net
 
 ######################################################################################
 #####################            CLI CONTAINER                 #######################
@@ -65,15 +48,13 @@ services:
 ######################################################################################
 
   indexer-service:
-    build:
-      context: ./autoagora-indexer-service
+    image: ${INDEXER_SERVICE_VERSION:-ghcr.io/graphprotocol/indexer-service:v0.20.5-alpha.1}
     container_name: indexer-service
     depends_on:
       - index-node-0
       - query-node-0
       - indexer-agent
       - postgres2
-      - rabbitmq
       #- vector-node
     environment:
       INDEXER_SERVICE_MNEMONIC: ${OPERATOR_SEED_PHRASE}
@@ -102,7 +83,6 @@ services:
       VIRTUAL_HOST: ${INDEX_HOST}
       VIRTUAL_PORT: 7600
       LETSENCRYPT_HOST: ${INDEX_HOST}
-      RABBITMQ_HOST: rabbitmq:5672
     expose:
       - 7300
       - 7600
