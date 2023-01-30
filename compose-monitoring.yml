@@ -27,7 +27,7 @@ services:
 
   nginx-proxy:
     image: jwilder/nginx-proxy
-    container_name: nginx-proxy
+    hostname: nginx-proxy
     depends_on:
       - grafana
     #environment:
@@ -57,7 +57,7 @@ services:
 
   nginx-ssl:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-ssl
+    hostname: nginx-ssl
     depends_on:
       - grafana
     volumes:
@@ -86,7 +86,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
+    hostname: prometheus
     #environment:
     #  VIRTUAL_HOST: ${PROMETHEUS_HOST}
     #  VIRTUAL_PORT: 9090
@@ -120,7 +120,7 @@ services:
 
   alertmanager:
     image: prom/alertmanager
-    container_name: alertmanager
+    hostname: alertmanager
     volumes:
       - ./alertmanager:/etc/alertmanager
     command:
@@ -145,7 +145,7 @@ services:
 
   nodeexporter:
     image: prom/node-exporter
-    container_name: nodeexporter
+    hostname: nodeexporter
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -174,7 +174,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
-    container_name: cadvisor
+    hostname: cadvisor
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -200,7 +200,7 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
+    hostname: grafana
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -237,7 +237,7 @@ services:
 
   pushgateway:
     image: prom/pushgateway
-    container_name: pushgateway
+    hostname: pushgateway
     restart: unless-stopped
     expose:
       - 9091
