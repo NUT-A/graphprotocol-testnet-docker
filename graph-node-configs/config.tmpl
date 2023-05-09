@@ -35,6 +35,10 @@ provider = [ { label = "${CHAIN_5_NAME_0}", url = "${CHAIN_5_RPC_0}", features =
 shard = "primary"
 provider = [ { label = "${CHAIN_6_NAME}", url = "${CHAIN_6_RPC}", features = ["archive", "traces"] } ]
 
+[chains.${CHAIN_7_NAME}]
+shard = "primary"
+provider = [ { label = "CHAIN_7_NAME", details = { type = "firehose", url = "${CHAIN_7_RPC}" } } ]
+
 [deployment]
 [[deployment.rule]]
 indexers = [ "index_node_0" ]
