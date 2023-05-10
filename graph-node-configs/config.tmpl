@@ -37,8 +37,8 @@ provider = [ { label = "${CHAIN_6_NAME}", url = "${CHAIN_6_RPC}", features = ["a
 
 [chains.${CHAIN_7_NAME}]
 shard = "primary"
-protocol = "ethereum"
 provider = [
+{ label = "firehose", details = { type = "firehose", url = "${CHAIN_7_RPC}" } }
 { label = "substreams", details = { type = "substreams", url = "${CHAIN_7_RPC}", features = ["compression", "filters"], conn_pool_size = 100 } },
 { label = "peering", url = "http://5.9.100.116:9656/", features = ["archive", "traces"] }
 ]
